@@ -44,7 +44,7 @@ export default function ExamplesSection() {
           <div className="flex justify-center mb-8">
             <TabsList className="bg-black/30 backdrop-blur-md border border-purple-500/20">
               <TabsTrigger value="logo" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-                Company Logo
+                Bacon
               </TabsTrigger>
               <TabsTrigger
                 value="character"
@@ -64,19 +64,7 @@ export default function ExamplesSection() {
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-purple-300">Before: PNG Image</h3>
-                    <div className="bg-gray-800 bg-opacity-50 rounded-lg p-4 h-[400px] flex items-center justify-center relative overflow-hidden">
-                      <div className="absolute inset-0 opacity-20">
-                        <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern"></div>
-                      </div>
-                      <div className="relative z-10 bg-white/10 backdrop-blur-sm p-8 rounded-lg">
-                        <div className="w-32 h-32 mx-auto bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-4xl font-bold">AB</span>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-2 right-2 bg-black/40 text-xs text-gray-400 px-2 py-1 rounded">
-                        logo.png
-                      </div>
-                    </div>
+                    <img src="/assets/bacon.png" />
                   </div>
 
                   <div>

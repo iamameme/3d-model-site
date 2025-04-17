@@ -25,7 +25,7 @@ export default function Header() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            {/* <Link href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Features
             </Link>
             <Link href="#faq" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
@@ -33,11 +33,11 @@ export default function Header() {
             </Link>
             <Link href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Pricing
-            </Link>
+            </Link> */}
           </nav>
 
           <div className="flex items-center gap-4">
-            <TooltipProvider>
+            {/* <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
@@ -48,7 +48,7 @@ export default function Header() {
                   <p>Coming Soon</p>
                 </TooltipContent>
               </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
 
             <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
               <svg

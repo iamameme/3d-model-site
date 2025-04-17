@@ -84,18 +84,6 @@ export default function FAQ() {
               For input images, we support JPEG, PNG, WebP, and most common image formats.
             </AccordionContent>
           </AccordionItem>
-
-          <AccordionItem value="item-5">
-            <AccordionTrigger className="px-4 text-white hover:text-purple-300">
-              Can I use the 3D models commercially?
-            </AccordionTrigger>
-            <AccordionContent className="px-4 text-gray-300">
-              Yes, you own all rights to the 3D models generated from your images. However, please ensure you have the
-              proper rights to the original 2D images you upload. Our service doesn't grant you any additional rights to
-              copyrighted material. For commercial use, we recommend using images you've created yourself or have
-              explicit permission to use.
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
       </div>
     </section>

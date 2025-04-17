@@ -3,7 +3,7 @@ export default function Hero() {
   return (
     <div className="py-6">
       <div className="container relative z-10 mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
+        <h1 style={{ height: 60 }} className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">
           2D Image to 3D Model
         </h1>
 

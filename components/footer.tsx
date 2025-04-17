@@ -22,7 +22,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-800">
+        {/* <div className="mt-8 pt-6 border-t border-gray-800">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <h4 className="text-sm font-medium text-purple-300 mb-3">Resources</h4>
@@ -87,7 +87,7 @@ export default function Footer() {
               </ul>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </footer>
   )
