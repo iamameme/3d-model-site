@@ -344,7 +344,7 @@ def center_object_origin(obj):
     obj.location += center
 
 
-def get_extended_image(img, fill_width=50, min_alpha=227):
+def get_extended_image(img, fill_width=80, min_alpha=227):
     import numpy as np
     from PIL import Image
     original_np = np.array(img).astype(np.float32)
@@ -532,10 +532,12 @@ class OBJECT_OT_ImageToMesh(Operator, ImportHelper):
                 self.filepath, self.simplicity, self.min_length)
 
         for curve in curves:
-            if not self.enclosed:
-                mesh_obj = curve_to_mesh(curve, self.extrude_depth)
+            curvefunc = curve_to_mesh
             if self.rounded:
-                mesh_obj = curve_to_mesh_rounded(curve, self.extrude_depth)
+                curvefunc = curve_to_mesh_rounded
+            if not self.enclosed:
+                mesh_obj = curvefunc(curve, self.extrude_depth)
+            
 
             unwrap_uv_no_bounds(mesh_obj, self.filepath)
             apply_image_material(mesh_obj, self.filepath)
@@ -687,10 +689,11 @@ def run_headless():
             args.image, args.simplicity, args.min_length)
 
     for curve in curves:
-        if not args.enclosed:
-            mesh_obj = curve_to_mesh(curve, args.extrude)
+        curvefunc = curve_to_mesh
         if args.rounded:
-            mesh_obj = curve_to_mesh_rounded(curve, args.extrude)
+            curvefunc = curve_to_mesh_rounded
+        if not args.enclosed:
+            mesh_obj = curvefunc(curve, args.extrude)
 
         unwrap_uv_no_bounds(mesh_obj, args.image)
         apply_image_material(mesh_obj, args.image)
