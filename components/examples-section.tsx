@@ -58,11 +58,11 @@ export default function ExamplesSection() {
             </TabsList>
           </div>
 
-          <TabsContent value="logo" className="mt-0">
+          <TabsContent value="logo" className="mt-0" style={{ maxWidth: 960, margin: '0 auto'}}>
             <Card className="bg-black/30 backdrop-blur-md border-purple-500/20">
               <CardContent className="p-6">
                 <div className="grid md:grid-cols-2 gap-8">
-                  <div>
+                  <div style={{ maxHeight: 440 }}>
                     <h3 className="text-xl font-semibold mb-4 text-purple-300">Before: PNG Image</h3>
                     <img src="/assets/bacon.png" />
                   </div>
