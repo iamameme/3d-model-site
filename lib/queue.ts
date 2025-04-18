@@ -36,7 +36,7 @@ export const registerWorker = () => {
         minlength,
       } = job.data;
 
-      let blenderCmd = `blender --background --python ./imageToMeshPlugin.py -- --image "${imageUrl}" --extrude ${extrude} --simplicity ${simplicity} --filetype ${format} --minlength ${minlength}`;
+      let blenderCmd = `blender --background --python /app/ImageToMeshPlugin.py -- --image "${imageUrl}" --extrude ${extrude} --simplicity ${simplicity} --filetype ${format} --minlength ${minlength}`;
       if (enclosed) blenderCmd += ` --enclosed`;
       if (rounded) blenderCmd += ` --rounded`;
 

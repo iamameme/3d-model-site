@@ -8,7 +8,10 @@
     "start": "next start -p 3002",
     "lint": "next lint",
     "board": "REDIS_URL=redis://localhost:6378 tsx scripts/bullboard.ts",
-    "worker": "REDIS_URL=redis://localhost:6378 tsx scripts/worker.ts"
+    "worker": "REDIS_URL=redis://localhost:6378 tsx scripts/worker.ts",
+    "docker-build": "docker compose up --build",
+    "docker-down": "docker compose down",
+    "docker-down-full": "docker compose down -v"
   },
   "dependencies": {
     "@bull-board/api": "^6.9.2",

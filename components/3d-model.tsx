@@ -5,6 +5,7 @@ import { Canvas, useLoader } from '@react-three/fiber'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { FBXLoader } from 'three-stdlib'
 import { OBJLoader } from 'three-stdlib'
+import { GLTFLoader } from 'three-stdlib'
 import * as THREE from 'three'
 
   
@@ -91,6 +92,27 @@ import * as THREE from 'three'
   
     return <primitive object={model} rotation={[Math.PI / 2, 0, 0]} />
   }
+
+  export function GenericModel({ url, format, setMesh }: Props) {
+    const LoaderClass = useMemo(() => {
+      if (format === 'glb' || format === 'gltf') return GLTFLoader
+      if (format === 'fbx') return FBXLoader
+      if (format === 'obj') return OBJLoader
+      return GLTFLoader
+    }, [format])
+  
+    const model = useLoader(LoaderClass, url)
+  
+    useEffect(() => {
+      const mesh = model?.scene?.getObjectByProperty?.('type', 'Mesh') || 
+                   model?.getObjectByProperty?.('type', 'Mesh')
+      if (mesh) setMesh(mesh)
+    }, [model, setMesh])
+  
+    const object = model.scene || model
+  
+    return <primitive object={object} rotation={[Math.PI / 2, 0, 0]} />
+  }
   
 type Props = {
     url: string
@@ -99,14 +121,10 @@ type Props = {
   }
 
   
-export function GetModel({ url, format, setMesh }: Props) {
-  if (format === 'glb' || format === 'gltf') return <GlbModel url={url} setMesh={setMesh} />
-  if (format === 'obj') return <ObjModel url={url} setMesh={setMesh} />
-  if (format === 'fbx') return <FbxModel url={url} setMesh={setMesh} />
-
-  return null
-}
-
+  export function GetModel({ url, format, setMesh }: Props) {
+    return <GenericModel url={url} format={format} setMesh={setMesh} />
+  }
+  
 export default function GetM({ url, format = 'gltf', preview }: { url: string; format: string; preview: boolean }) {
     const [mesh, setMesh] = useState<any>(null);
     const model = GetModel({ url, format, setMesh});

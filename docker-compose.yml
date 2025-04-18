@@ -6,11 +6,12 @@ services:
     build: .
     ports:
       - "3002:3002"
+    entrypoint: ["sh", "./entrypoint.sh"]
     depends_on:
       - db
       - redis
     environment:
-      DATABASE_URL: postgres://postgres:password@db:5432/mydb
+      DATABASE_URL: postgres://postgres:holabola00@db:5432/mydb
       REDIS_URL: redis://redis:6379
       command: sh -c "npx prisma migrate deploy && pnpm start"
 
@@ -18,7 +19,7 @@ services:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: holabola00
       POSTGRES_DB: mydb
     volumes:
       - db_data:/var/lib/postgresql/data

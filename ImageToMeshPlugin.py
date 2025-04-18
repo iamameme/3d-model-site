@@ -647,6 +647,54 @@ def install_packages_headless():
                 print(f"[Dependency ERROR] Failed to install {package}: {e}")
                 sys.exit(1)
 
+def export_obj(filepath):
+    major, minor, _ = bpy.app.version
+
+    if (major, minor) >= (3, 6):
+        # Blender 3.6+ uses new exporter
+        bpy.ops.wm.obj_export(
+            filepath=filepath,
+            export_selected_objects=True
+        )
+    else:
+        # Blender < 3.6 uses legacy exporter
+        if not bpy.ops.export_scene.obj.poll():
+            bpy.ops.preferences.addon_enable(module="io_scene_obj")
+
+        selected_objects = [obj for obj in bpy.context.selected_objects if obj.type == 'MESH']
+        if not selected_objects:
+            print("No mesh objects selected to export.")
+            return
+
+        bpy.context.view_layer.objects.active = selected_objects[0]
+
+        override = {
+            "context": bpy.context.copy(),
+            "selected_objects": selected_objects,
+            "object": selected_objects[0],
+            "active_object": selected_objects[0],
+        }
+
+        bpy.ops.export_scene.obj(
+            override,
+            filepath=filepath,
+            use_selection=True,
+            axis_forward='-Z',
+            axis_up='Y'
+        )
+
+def export_gltf(output):
+    # Fix extension if needed
+    if output.lower().endswith('.gltf'):
+        output = output[:-5] + '.glb'
+    elif not output.lower().endswith('.glb'):
+        output += '.glb'
+
+    bpy.ops.export_scene.gltf(
+        filepath=output,
+        use_selection=True,
+        export_format='GLB'
+    )
 
 def run_headless():
     install_packages_headless()
@@ -722,14 +770,12 @@ def run_headless():
     bpy.ops.object.select_all(action='SELECT')
     # Export OBJ
     if type == "obj":
-        bpy.ops.wm.obj_export(filepath=output,
-                              export_selected_objects=True)
+        export_obj(output)
     elif type == "fbx":
         bpy.ops.export_scene.fbx(
             filepath=output, use_selection=True, path_mode="COPY", embed_textures=True)
     elif type == "gltf":
-        bpy.ops.export_scene.gltf(
-            filepath=output, use_selection=True)
+        export_gltf(output)
 
 
 if bpy.app.background:
