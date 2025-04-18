@@ -20,7 +20,7 @@ export default function Header() {
               href="/"
               className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
             >
-              2D to 3D Converter
+              Transparent 2D to Flat 3D Converter
             </Link>
           </div>
 

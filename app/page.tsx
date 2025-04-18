@@ -10,7 +10,7 @@ import HowToUse from "@/components/how-to-use"
 import ExamplesSection from "@/components/examples-section"
 
 export const metadata: Metadata = {
-  title: "2D Image to 3D Model | For Games and Printing",
+  title: "Transparent 2D to Flat 3D Converter | For Games and Printing",
   description: "Convert your 2D images into 3D models for games, printing, and more.",
 }
 

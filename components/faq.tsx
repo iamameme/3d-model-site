@@ -18,10 +18,8 @@ export default function FAQ() {
               How does 2D to 3D conversion work?
             </AccordionTrigger>
             <AccordionContent className="px-4 text-gray-300">
-              Our 2D to 3D conversion uses advanced AI algorithms to analyze the depth, contours, and features of your
-              2D image. The system then extrudes and shapes a 3D model based on this analysis, applying the parameters
-              you've selected such as extrusion depth, simplicity, and edge treatment. The result is a 3D model that
-              captures the essence of your 2D image while providing depth and dimension.
+              It uses the Blender plugin mentioned above. That plugin looks at the image, find the contour of it, creates a mesh out of it, extrudes it,
+              then takes the base image, adds colors to the outsides of it (to fill in the newly extruded areas), and applies it as a material!
             </AccordionContent>
           </AccordionItem>
 
@@ -59,6 +57,10 @@ export default function FAQ() {
                   <strong>Rounded Edges:</strong> Applies a bevel or fillet to sharp edges, creating a smoother, more
                   organic look.
                 </li>
+                <li>
+                  <strong>Minimum Length:</strong> For images with disconnected / multiple objects. Tuning this will result in 
+                  more objects from the image showing up, but also possibly artifacts.
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>
@@ -68,7 +70,7 @@ export default function FAQ() {
               Which file formats are supported?
             </AccordionTrigger>
             <AccordionContent className="px-4 text-gray-300">
-              We support exporting to the most common 3D file formats:
+              I support exporting to the most common 3D file formats:
               <ul className="list-disc pl-5 space-y-1 mt-2">
                 <li>
                   <strong>GLTF/GLB:</strong> Ideal for web and game engines like Unity and Unreal Engine.
@@ -81,7 +83,7 @@ export default function FAQ() {
                   Max.
                 </li>
               </ul>
-              For input images, we support JPEG, PNG, WebP, and most common image formats.
+              For input images, I support PNG. 
             </AccordionContent>
           </AccordionItem>
         </Accordion>

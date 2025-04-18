@@ -3,13 +3,10 @@
 import {  useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Environment, PresentationControls, Stage } from "@react-three/drei"
-import { Suspense } from "react"
-import { Get3DModel } from "./3d-model"
+import { Get3DModel } from "./3d-model-2";
 
 function LogoModel() {
-  return Get3DModel();
+  return Get3DModel("/assets/3d/bacon.glb");
 }
 
 function CharacterModel() {

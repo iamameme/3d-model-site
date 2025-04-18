@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { Upload, ImageIcon, Loader2 } from "lucide-react"
+import { Upload, ImageIcon, Loader2, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -12,14 +12,17 @@ import { useToast } from "@/hooks/use-toast"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Slider } from "@/components/ui/slider"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export default function ImageUploader() {
   const [image, setImage] = useState<string | null>(null)
+  const [imageName, setImageName] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [outputFormat, setOutputFormat] = useState("gltf")
   const [extrudeDepth, setExtrudeDepth] = useState(0.2)
   const [simplicity, setSimplicity] = useState(3.0)
+  const [minimumLength, setMinimumLength] = useState(2000)
   const [enclosed, setEnclosed] = useState(false)
   const [roundedEdges, setRoundedEdges] = useState(false)
   const [cooldown, setCooldown] = useState(0)
@@ -54,7 +57,7 @@ export default function ImageUploader() {
       if (!file.type.startsWith("image/")) {
         toast({
           title: "Invalid file type",
-          description: "Please upload an image file (JPEG, PNG, etc.)",
+          description: "Please upload a PNG file",
           variant: "destructive",
         })
         return
@@ -64,6 +67,7 @@ export default function ImageUploader() {
       const reader = new FileReader()
       reader.onload = () => {
         setImage(reader.result as string)
+        setImageName(file.name);
         setIsUploading(false)
       }
       reader.readAsDataURL(file)
@@ -94,37 +98,64 @@ export default function ImageUploader() {
     e.preventDefault()
   }
 
-  const handleProcess = () => {
+  const handleProcess = async () => {
     if (!image || cooldownActive) return
 
     setIsProcessing(true)
-    // Simulate processing time
-    setTimeout(() => {
-      setIsProcessing(false)
-
-      // Dispatch an event that the model viewer can listen for
-      window.dispatchEvent(
-        new CustomEvent("modelProcessed", {
-          detail: {
-            imageUrl: image,
-            format: outputFormat,
-            extrudeDepth,
-            simplicity,
-            enclosed,
-            roundedEdges,
-          },
-        }),
-      )
-
-      toast({
-        title: "Processing complete",
-        description: `Your 3D model has been generated in ${outputFormat.toUpperCase()} format.`,
+    const resp = await fetch("/api/submit", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+          imageData: image,
+          imageName,
+          format: outputFormat,
+          extrude: extrudeDepth,
+          simplicity,
+          minlength: minimumLength,
+          enclosed,
+          rounded: roundedEdges,
       })
+    })
+    const json = await resp.json();
+    const jobId = json.jobId;
 
-      // Start cooldown
-      setCooldown(15)
-      setCooldownActive(true)
-    }, 3000)
+    let processing = true;
+    while (processing) {
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      const statusResp = await fetch(`/api/status?jobId=${jobId}`)
+      const statusJson = await statusResp.json();
+      if (statusJson.status == 'completed') {
+        processing = false;
+      }
+    }
+
+    // Dispatch an event that the model viewer can listen for
+    window.dispatchEvent(
+      new CustomEvent("modelProcessed", {
+        detail: {
+          imageUrl: image,
+          downloadUrl: `/api/download?jobId=${jobId}`,
+          imageName,
+          format: outputFormat,
+          extrudeDepth,
+          simplicity,
+          minimumLength,
+          enclosed,
+          roundedEdges,
+          jobId,
+        },
+      }),
+    )
+
+    toast({
+      title: "Processing complete",
+      description: `Your 3D model has been generated in ${outputFormat.toUpperCase()} format.`,
+    })
+
+    // Start cooldown
+    setIsProcessing(false)
+    setCooldown(15)
+    setCooldownActive(true)
   }
 
   return (
@@ -149,6 +180,7 @@ export default function ImageUploader() {
                   <img src={image || "/placeholder.svg"} alt="Uploaded" className="w-full h-auto" />
                 </div>
                 <Button
+                  variant="outline"
                   onClick={() => setImage(null)}
                   className="border-purple-500 text-purple-300 hover:bg-purple-950/30"
                 >
@@ -162,7 +194,7 @@ export default function ImageUploader() {
               >
                 <Upload className="h-8 w-8 text-purple-500 mb-2" />
                 <p className="text-sm font-medium text-gray-300">Drag and drop your image here or click to browse</p>
-                <p className="mt-1 text-xs text-gray-400">Supports JPEG, PNG, WebP</p>
+                <p className="mt-1 text-xs text-gray-400">Supports PNG w/ Transparent Background</p>
               </div>
             )}
             <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
@@ -260,6 +292,50 @@ export default function ImageUploader() {
                   className="flex-1"
                 />
               </div>
+            </div>
+          </div>
+
+          <div className="mt-6 space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Label htmlFor="minimum-length" className="text-gray-300">
+                  Minimum Length
+                </Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-4 w-4 text-gray-400 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>
+                        The lower this value, the more likely small objects (or artifacts) will show up. The higher, the
+                        less likely artifacts will show up.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <span className="text-sm text-purple-300 font-mono">{minimumLength}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Input
+                id="minimum-length"
+                type="number"
+                min="500"
+                max="5000"
+                step="100"
+                value={minimumLength}
+                onChange={(e) => setMinimumLength(Number.parseInt(e.target.value))}
+                className="w-20 bg-gray-900/60 border-purple-500/30 text-gray-200"
+              />
+              <Slider
+                value={[minimumLength]}
+                min={500}
+                max={5000}
+                step={100}
+                onValueChange={(value) => setMinimumLength(value[0])}
+                className="flex-1"
+              />
             </div>
           </div>
 

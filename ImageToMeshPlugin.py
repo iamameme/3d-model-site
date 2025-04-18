@@ -537,7 +537,6 @@ class OBJECT_OT_ImageToMesh(Operator, ImportHelper):
                 curvefunc = curve_to_mesh_rounded
             if not self.enclosed:
                 mesh_obj = curvefunc(curve, self.extrude_depth)
-            
 
             unwrap_uv_no_bounds(mesh_obj, self.filepath)
             apply_image_material(mesh_obj, self.filepath)
@@ -671,8 +670,8 @@ def run_headless():
                         help="Use rounded bevel on extrusion")
     parser.add_argument("--filetype", default="obj",
                         help="Select a file type: OBJ / FBX / GLTF")
-    parser.add_argument("--min_length", default=2000.0,
-                        help="Minimum Length of a Generated Object")
+    parser.add_argument("--minlength", type=float,
+                        default=2000.0, help="Minimum Length of a Generated Object")
 
     args = parser.parse_args(argv)
     type = args.filetype.lower()
@@ -686,7 +685,7 @@ def run_headless():
             args.image, .5, 0.1, args.extrude)
     else:
         curves = image_to_outer_curve_arr(
-            args.image, args.simplicity, args.min_length)
+            args.image, args.simplicity, args.minlength)
 
     for curve in curves:
         curvefunc = curve_to_mesh
