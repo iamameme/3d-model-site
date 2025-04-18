@@ -66,7 +66,7 @@ export default function DownloadSection() {
                 <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
                   <Github className="mr-2 h-4 w-4" />
                   <a
-                    href="https://github.com/stevenbarsam/2D-to-3D-Blender-Plugin"
+                    href="https://github.com/iamameme/blender-2d-to-3d-plugin"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
