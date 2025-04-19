@@ -10,7 +10,7 @@ export default function DownloadSection() {
             Download the Code!
           </h2>
           <p className="text-gray-300 mt-2 max-w-2xl mx-auto">
-            Want to run this conversion locally? We've created a Blender plugin that provides the same functionality as
+            Want to run this conversion locally? I've created a Blender plugin that provides the same functionality as
             this website.
           </p>
         </div>
@@ -20,9 +20,10 @@ export default function DownloadSection() {
             <div className="w-full md:w-1/2">
               <div className="aspect-video rounded-lg bg-black/40 flex items-center justify-center overflow-hidden">
                 <div className="relative w-full h-full">
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  {/* <div className="absolute inset-0 flex items-center justify-center">
                     <Code2 className="w-16 h-16 text-purple-400 opacity-50" />
-                  </div>
+                  </div> */}
+                  <img src="blender.png" />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                     <div className="flex items-center gap-2">
                       <div className="h-3 w-3 rounded-full bg-green-500"></div>
@@ -36,7 +37,7 @@ export default function DownloadSection() {
             <div className="w-full md:w-1/2">
               <h3 className="text-xl font-bold text-white mb-3">Blender Plugin</h3>
               <p className="text-gray-300 mb-6">
-                Our open-source Blender plugin gives you the same conversion capabilities offline. Perfect for artists,
+                My open-source Blender plugin gives you the same conversion capabilities offline. Perfect for artists,
                 game developers, and 3D printing enthusiasts who want to integrate this functionality directly into
                 their workflow.
               </p>

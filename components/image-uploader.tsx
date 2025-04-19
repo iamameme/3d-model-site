@@ -159,7 +159,7 @@ export default function ImageUploader() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" id="upload-section">
       <Card className="bg-black/30 backdrop-blur-md border-purple-500/20">
         <CardContent className="p-6">
           <div

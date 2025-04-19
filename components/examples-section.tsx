@@ -10,11 +10,11 @@ function LogoModel() {
 }
 
 function CharacterModel() {
-  return Get3DModel("/assets/3D/riotstevie.glb");
+  return Get3DModel("/assets/3d/riotstevie.glb");
 }
 
 function IconModel() {
-  return Get3DModel("/assets/3D/burger.glb");
+  return Get3DModel("/assets/3d/burger.glb");
 }
 
 function ModelViewer({ modelType }: { modelType: "logo" | "character" | "icon" }) {
@@ -31,11 +31,11 @@ export default function ExamplesSection() {
   const [activeTab, setActiveTab] = useState("logo")
 
   return (
-    <section className="py-8">
+    <section style={{ paddingBottom: '2rem'}} className="">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+        {/* <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
           Check Out Some Examples
-        </h2>
+        </h2> */}
 
         <Tabs defaultValue="logo" className="w-full" onValueChange={(value) => setActiveTab(value)}>
           <div className="flex justify-center mb-8">

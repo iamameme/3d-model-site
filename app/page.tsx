@@ -10,9 +10,11 @@ import HowToUse from "@/components/how-to-use"
 import ExamplesSection from "@/components/examples-section"
 
 export const metadata: Metadata = {
-  title: "Transparent 2D to Flat 3D Converter | For Games and Printing",
-  description: "Convert your 2D images into 3D models for games, printing, and more.",
+  title: "PNG to Flat 3D Converter | For Games and Printing",
+  description: "100% free online / Blender plugin to convert a 2D image to a 3D model with NO AI. Consistent results everytime. For games and 3D printing.",
 }
+// 2D to 3D AI — Transform any text or images to 3D in seconds, quad faces and PBR texture supported.
+// Rodin is an advanced 3D model AI generator. Biggest discount so far. Limited time deal.
 
 export default function Home() {
   return (
@@ -21,7 +23,8 @@ export default function Home() {
         <Header />
         <Hero />
         <main className="container mx-auto px-4 py-4">
-          <HowToUse />
+          {/* <HowToUse /> */}
+            <ExamplesSection />
 
           <div className="mt-6 grid gap-6 md:grid-cols-2">
             <div>
@@ -34,9 +37,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-16">
-            <ExamplesSection />
-          </div>
+          
 
           <div className="mt-16">
             <DownloadSection />

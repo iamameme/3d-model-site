@@ -11,7 +11,7 @@ export default function Footer() {
                 <span className="text-white font-bold text-xs">3D</span>
               </div>
               <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
-                Transparent 2D to Flat 3D Converter
+                PNG to Flat 3D Converter
               </span>
             </div>
           </div>

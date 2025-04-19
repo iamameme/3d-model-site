@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import ConversionsCounter from "./conversions-counter"
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,7 +21,7 @@ export default function Header() {
               href="/"
               className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400"
             >
-              Transparent 2D to Flat 3D Converter
+              PNG to Flat 3D Converter
             </Link>
           </div>
 
@@ -36,7 +37,8 @@ export default function Header() {
             </Link> */}
           </nav>
 
-          <div className="flex items-center gap-4">
+          <div style={{ position: 'absolute', right: 20}} className="flex items-center gap-4">
+            <ConversionsCounter />
             {/* <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -74,14 +76,14 @@ export default function Header() {
         <div className="md:hidden p-4 bg-black/30 backdrop-blur-lg">
           <nav className="flex flex-col space-y-4">
             <Link href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Features
+              Nothing Yet
             </Link>
-            <Link href="#faq" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            {/* <Link href="#faq" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               FAQ
             </Link>
             <Link href="#" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Pricing
-            </Link>
+            </Link> */}
           </nav>
         </div>
       )}
