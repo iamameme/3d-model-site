@@ -20,6 +20,7 @@ export default function ModelViewer() {
   const [objectUrl, setObjectUrl] = useState<string>('');
   const [modelParams, setModelParams] = useState({
     extrudeDepth: 0.2,
+    alphaThreshold: 0.15,
     simplicity: 3.0,
     enclosed: false,
     roundedEdges: false,
@@ -38,6 +39,7 @@ export default function ModelViewer() {
       setFormat(e.detail.format)
       setModelParams({
         extrudeDepth: e.detail.extrudeDepth,
+        alphaThreshold: e.detail.alphaThreshold,
         simplicity: e.detail.simplicity,
         enclosed: e.detail.enclosed,
         roundedEdges: e.detail.roundedEdges,
@@ -148,6 +150,9 @@ export default function ModelViewer() {
                   </li>
                   <li>
                     Simplicity: <span className="text-purple-300 font-mono">{modelParams.simplicity}</span>
+                  </li>
+                  <li>
+                    Alpha Threshold: <span className="text-purple-300 font-mono">{modelParams.alphaThreshold}</span>
                   </li>
                   <li>
                     Minimum Length: <span className="text-purple-300 font-mono">{modelParams.minimumLength}</span>

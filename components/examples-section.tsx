@@ -97,7 +97,7 @@ export default function ExamplesSection() {
                     <div className="mt-2 flex justify-between items-center">
                       <span className="text-xs text-gray-400"></span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-1 rounded">Extrude: 4.0</span>
+                        <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-1 rounded">Extrude: 0.4</span>
                         <span className="text-xs bg-purple-900/50 text-purple-300 px-2 py-1 rounded">
                           Simplicity: 3.0
                         </span>

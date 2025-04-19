@@ -14,6 +14,7 @@ export type GenerateJobData = {
   imageUrl: string;
   format: string;
   extrude: number;
+  alphaThreshold: number;
   simplicity: number;
   enclosed: boolean;
   rounded: boolean;
@@ -34,9 +35,10 @@ export const registerWorker = () => {
         enclosed,
         rounded,
         minlength,
+        alphaThreshold,
       } = job.data;
 
-      let blenderCmd = `blender --background --python /app/ImageToMeshPlugin.py -- --image "${imageUrl}" --extrude ${extrude} --simplicity ${simplicity} --filetype ${format} --minlength ${minlength}`;
+      let blenderCmd = `blender --background --python /app/ImageToMeshPlugin.py -- --image "${imageUrl}" --extrude ${extrude} --simplicity ${simplicity} --filetype ${format} --minlength ${minlength} --alphathreshold ${alphaThreshold}`;
       if (enclosed) blenderCmd += ` --enclosed`;
       if (rounded) blenderCmd += ` --rounded`;
 

@@ -115,7 +115,7 @@ def trigger_install_later():
 # === Image Mesh Logic ===
 
 
-def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.1, pixels_per_unit=100.0):
+def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.15, pixels_per_unit=100.0):
     from skimage import measure
     from PIL import Image
     import numpy as np
@@ -163,8 +163,7 @@ def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.1, 
     # contours = [c for c in contours if len(c) >= min_points]
 
     curves = []
-    # Create curve
-    for contour in contours:
+    for contour in raw_contours:
         curve_data = bpy.data.curves.new(name="OuterContour", type='CURVE')
         curve_data.dimensions = '2D'
         curve_data.fill_mode = 'BOTH'
@@ -178,7 +177,9 @@ def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.1, 
             x = point[1] / pixels_per_unit
             y = point[0] / pixels_per_unit
             bp = spline.bezier_points[i]
-            bp.co = (x, y, 0)
+            bp.co = (x, y, 0.0)
+            bp.handle_left = bp.co
+            bp.handle_right = bp.co
             bp.handle_left_type = 'AUTO'
             bp.handle_right_type = 'AUTO'
 
@@ -188,8 +189,18 @@ def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.1, 
 
     return curves
 
+def smooth_bezier_curve(curve_obj):
+    # Smooth Bezier handles manually (if AUTO doesn't update enough, fallback to VECTOR + AUTO)
+    for spline in curve_obj.data.splines:
+        if spline.type != 'BEZIER':
+            continue
+        for bp in spline.bezier_points:
+            bp.handle_left_type = 'AUTO'
+            bp.handle_right_type = 'AUTO'
+            bp.handle_left = bp.co
+            bp.handle_right = bp.co
 
-def image_to_outer_curve(image_path, simplicity, threshold=0.1, pixels_per_unit=100.0):
+def image_to_outer_curve(image_path, simplicity, threshold=0.15, pixels_per_unit=100.0):
     from skimage import measure
     from PIL import Image
     import numpy as np
@@ -344,12 +355,12 @@ def center_object_origin(obj):
     obj.location += center
 
 
-def get_extended_image(img, fill_width=80, min_alpha=227):
+def get_extended_image(img, fill_width=100, min_alpha=227):
     import numpy as np
     from PIL import Image
     original_np = np.array(img).astype(np.float32)
     height, width, _ = original_np.shape
-    edge_margin = int(fill_width * 4)
+    edge_margin = int(fill_width )
 
     def composite_over_black(pixel):
         r, g, b, a = pixel / 255.0
@@ -402,7 +413,7 @@ def get_extended_image(img, fill_width=80, min_alpha=227):
     return result_img
 
 
-def contour_to_mesh(image_path, simplicity=3.0, threshold=0.1, extrude_depth=0.2, pixels_per_unit=100.0):
+def contour_to_mesh(image_path, simplicity=3.0, threshold=0.15, extrude_depth=0.2, pixels_per_unit=100.0):
     from skimage import measure
     from PIL import Image
     import numpy as np
@@ -505,6 +516,8 @@ class OBJECT_OT_ImageToMesh(Operator, ImportHelper):
         name="Extrude Depth", default=0.2, min=0.01, max=10.0)
     simplicity: FloatProperty(
         name="Simplicity", default=3.0, min=0.01, max=10.0)
+    alphathreshold: FloatProperty(
+        name="Alpha Threshold", default=0.15, min=0.0, max=1.0)
     min_length: FloatProperty(
         name="Minimum Length", default=2000.0, min=1.0, max=10000.0)
     enclosed: BoolProperty(
@@ -520,16 +533,19 @@ class OBJECT_OT_ImageToMesh(Operator, ImportHelper):
         self.enclosed = settings.enclosed
         self.rounded = settings.rounded
         self.min_length = settings.min_length
+        self.alphathreshold = settings.alphathreshold
 
         curves = [1]
         mesh_obj = 0
+        image_to_outer_curve_arr(
+                self.filepath, self.simplicity, self.min_length, self.alphathreshold)
 
         if self.enclosed:
             mesh_obj = contour_to_mesh(
-                self.filepath, .5, 0.1, self.extrude_depth)
+                self.filepath, .5, self.alphathreshold, self.extrude_depth)
         else:
             curves = image_to_outer_curve_arr(
-                self.filepath, self.simplicity, self.min_length)
+                self.filepath, self.simplicity, self.min_length, self.alphathreshold)
 
         for curve in curves:
             curvefunc = curve_to_mesh
@@ -581,6 +597,8 @@ class OBJECT_PT_ImageToMeshPanel(Panel):
         layout.prop(context.window_manager.image_to_mesh_settings,
                     'simplicity')
         layout.prop(context.window_manager.image_to_mesh_settings,
+                    'alphathreshold')
+        layout.prop(context.window_manager.image_to_mesh_settings,
                     'min_length')
         layout.prop(context.window_manager.image_to_mesh_settings,
                     'enclosed')
@@ -596,6 +614,8 @@ class ImageToMeshSettings(bpy.types.PropertyGroup):
         name="Simplicity", default=3.0, min=0.01, max=10.0)
     min_length: FloatProperty(
         name="Minimum Length", default=2000.0, min=1.0, max=10000.0)
+    alphathreshold: FloatProperty(
+        name="Alpha Threshold", default=0.15, min=0.0, max=1.0)
     enclosed: BoolProperty(
         name="Enclosed / 3D Printable", default=False)
     rounded: BoolProperty(
@@ -720,6 +740,8 @@ def run_headless():
                         help="Select a file type: OBJ / FBX / GLTF")
     parser.add_argument("--minlength", type=float,
                         default=2000.0, help="Minimum Length of a Generated Object")
+    parser.add_argument("--alphathreshold", type=float,
+                        default=0.15, help="Alpha threshold to decide if it should include a color")
 
     args = parser.parse_args(argv)
     type = args.filetype.lower()
@@ -730,10 +752,10 @@ def run_headless():
 
     if args.enclosed:
         mesh_obj = contour_to_mesh(
-            args.image, .5, 0.1, args.extrude)
+            args.image, .5, args.alphathreshold, args.extrude)
     else:
         curves = image_to_outer_curve_arr(
-            args.image, args.simplicity, args.minlength)
+            args.image, args.simplicity, args.minlength, args.alphathreshold)
 
     for curve in curves:
         curvefunc = curve_to_mesh

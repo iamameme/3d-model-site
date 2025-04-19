@@ -21,6 +21,7 @@ export default function ImageUploader() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [outputFormat, setOutputFormat] = useState("gltf")
   const [extrudeDepth, setExtrudeDepth] = useState(0.2)
+  const [alphaThreshold, setAlphaThreshold] = useState(0.15)
   const [simplicity, setSimplicity] = useState(3.0)
   const [minimumLength, setMinimumLength] = useState(2000)
   const [enclosed, setEnclosed] = useState(false)
@@ -29,7 +30,24 @@ export default function ImageUploader() {
   const [cooldownActive, setCooldownActive] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { toast } = useToast()
+  const imgRef = useRef<HTMLImageElement | null>(null)
 
+  useEffect(() => {
+    if (image && imgRef.current) {
+      imgRef.current.onload = () => {
+        const img = imgRef.current!
+        const isPlaceholder = img.src.endsWith("/placeholder.svg")
+        
+        if (isPlaceholder) {
+          return
+        }
+        const width = imgRef.current?.naturalWidth || 2000
+        const height = imgRef.current?.naturalHeight || 2000
+        setMinimumLength(Math.min(width,height));
+      }
+    }
+  }, [image])
+  
   // Cooldown timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -110,6 +128,7 @@ export default function ImageUploader() {
           imageName,
           format: outputFormat,
           extrude: extrudeDepth,
+          alphaThreshold,
           simplicity,
           minlength: minimumLength,
           enclosed,
@@ -138,6 +157,7 @@ export default function ImageUploader() {
           imageName,
           format: outputFormat,
           extrudeDepth,
+          alphaThreshold,
           simplicity,
           minimumLength,
           enclosed,
@@ -177,7 +197,7 @@ export default function ImageUploader() {
             ) : image ? (
               <div className="space-y-4">
                 <div className="relative mx-auto max-w-xs overflow-hidden rounded-lg">
-                  <img src={image || "/placeholder.svg"} alt="Uploaded" className="w-full h-auto" />
+                  <img ref={imgRef} src={image || "/placeholder.svg"} alt="Uploaded" className="w-full h-auto" />
                 </div>
                 <Button
                   variant="outline"
@@ -294,6 +314,35 @@ export default function ImageUploader() {
               </div>
             </div>
           </div>
+
+          <div className="mt-6 space-y-3">
+          <div className="flex justify-between">
+                <Label htmlFor="extrude-depth" className="text-gray-300">
+                  Alpha Threshold
+                </Label>
+                <span className="text-sm text-purple-300 font-mono">{alphaThreshold.toFixed(1)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="extrude-depth"
+                  type="number"
+                  min="0"
+                  max="1.0"
+                  step="0.05"
+                  value={alphaThreshold}
+                  onChange={(e) => setAlphaThreshold(Number.parseFloat(e.target.value))}
+                  className="w-20 bg-gray-900/60 border-purple-500/30 text-gray-200"
+                />
+                <Slider
+                  value={[alphaThreshold]}
+                  min={0}
+                  max={1.0}
+                  step={0.05}
+                  onValueChange={(value) => setAlphaThreshold(value[0])}
+                  className="flex-1"
+                />
+              </div>
+              </div>
 
           <div className="mt-6 space-y-3">
             <div className="flex justify-between items-center">

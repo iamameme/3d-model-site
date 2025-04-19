@@ -46,6 +46,9 @@ export default function FAQ() {
                   values create thicker models.
                 </li>
                 <li>
+                  <strong>Alpha Threshold:</strong> Controls the alpha of a pixel that should be included.
+                </li>
+                <li>
                   <strong>Simplicity:</strong> Determines how many vertices and faces are used in the model. Higher
                   values create simpler models with fewer details.
                 </li>
