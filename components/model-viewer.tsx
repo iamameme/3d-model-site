@@ -133,8 +133,8 @@ export default function ModelViewer() {
                   <img
                     src={processingImage || "/placeholder.svg"}
                     alt="Original"
-                    style={{ maxWidth: 200, margin: '0 auto' }}
-                    className="h-full w-full object-cover"
+                    style={{ maxWidth: 200, margin: '0 auto', objectFit: 'contain' }}
+                    className="h-full w-full"
                   />
                 )}
               </div>
