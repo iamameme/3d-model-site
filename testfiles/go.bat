@@ -1,1 +1,1 @@
-"C:\Program Files\Blender Foundation\Blender 3.6\blender.exe" --background --python imageToMeshPlugin.py -- --image "burger.png" --extrude 0.3 --rounded --simplicity 3 --filetype "gltf"
+"C:\Program Files\Blender Foundation\Blender 3.6\blender.exe" --background --python ../ImageToMeshPlugin.py -- --image "riotstevie.png" --minlength 200 --alphathreshold 0.15 --extrude 0.4 --simplicity 3 --filetype "gltf"
