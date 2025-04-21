@@ -162,8 +162,9 @@ def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.15,
     ]
     # contours = [c for c in contours if len(c) >= min_points]
 
+    print(len(raw_contours))
     curves = []
-    for contour in raw_contours:
+    for contour in contours:
         curve_data = bpy.data.curves.new(name="OuterContour", type='CURVE')
         curve_data.dimensions = '2D'
         curve_data.fill_mode = 'BOTH'
@@ -189,6 +190,7 @@ def image_to_outer_curve_arr(image_path, simplicity, min_length, threshold=0.15,
 
     return curves
 
+
 def smooth_bezier_curve(curve_obj):
     # Smooth Bezier handles manually (if AUTO doesn't update enough, fallback to VECTOR + AUTO)
     for spline in curve_obj.data.splines:
@@ -199,6 +201,7 @@ def smooth_bezier_curve(curve_obj):
             bp.handle_right_type = 'AUTO'
             bp.handle_left = bp.co
             bp.handle_right = bp.co
+
 
 def image_to_outer_curve(image_path, simplicity, threshold=0.15, pixels_per_unit=100.0):
     from skimage import measure
@@ -360,7 +363,7 @@ def get_extended_image(img, fill_width=100, min_alpha=227):
     from PIL import Image
     original_np = np.array(img).astype(np.float32)
     height, width, _ = original_np.shape
-    edge_margin = int(fill_width )
+    edge_margin = int(fill_width)
 
     def composite_over_black(pixel):
         r, g, b, a = pixel / 255.0
@@ -538,7 +541,7 @@ class OBJECT_OT_ImageToMesh(Operator, ImportHelper):
         curves = [1]
         mesh_obj = 0
         image_to_outer_curve_arr(
-                self.filepath, self.simplicity, self.min_length, self.alphathreshold)
+            self.filepath, self.simplicity, self.min_length, self.alphathreshold)
 
         if self.enclosed:
             mesh_obj = contour_to_mesh(
@@ -667,6 +670,7 @@ def install_packages_headless():
                 print(f"[Dependency ERROR] Failed to install {package}: {e}")
                 sys.exit(1)
 
+
 def export_obj(filepath):
     major, minor, _ = bpy.app.version
 
@@ -681,7 +685,8 @@ def export_obj(filepath):
         if not bpy.ops.export_scene.obj.poll():
             bpy.ops.preferences.addon_enable(module="io_scene_obj")
 
-        selected_objects = [obj for obj in bpy.context.selected_objects if obj.type == 'MESH']
+        selected_objects = [
+            obj for obj in bpy.context.selected_objects if obj.type == 'MESH']
         if not selected_objects:
             print("No mesh objects selected to export.")
             return
@@ -703,6 +708,7 @@ def export_obj(filepath):
             axis_up='Y'
         )
 
+
 def export_gltf(output):
     # Fix extension if needed
     if output.lower().endswith('.gltf'):
@@ -715,6 +721,7 @@ def export_gltf(output):
         use_selection=True,
         export_format='GLB'
     )
+
 
 def run_headless():
     install_packages_headless()

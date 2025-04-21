@@ -13,5 +13,6 @@ npx prisma migrate deploy
 # Or: for dev use only
 # npx prisma migrate dev --name init
 
+nohup pnpm run board
 # Then start your app
 pnpm start

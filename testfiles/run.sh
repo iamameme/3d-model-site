@@ -1,9 +1,8 @@
 Blender --background --python ../imageToMeshPlugin.py -- \
-    --image "burger.png" \
-    --extrude 0.2 \
+    --image "riotstevie.png" \
+    --extrude 0.4 \
     --simplicity 3 \
     --filetype "gltf" \
-    --minlength 200 \
-    --rounded
+    --minlength 1000
     #--enclosed \
     #--rounded \
